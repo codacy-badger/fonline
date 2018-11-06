@@ -369,6 +369,11 @@ if( NOT BUILD_ONLY_CLIENT )
 	include_directories( "${CMAKE_BINARY_DIR}/openssl/ssl" )
 endif()
 
+if( NOT BUILD_ONLY_CLIENT )
+	file( GLOB OpenFBX_SOURCE "OpenFBX/src/ofbx.cpp" "OpenFBX/src/ofbx.h" "OpenFBX/src/miniz.c" "OpenFBX/src/miniz.h" )
+	source_group( "ThirdParty\\OpenFBX" FILES ${OpenFBX_SOURCE} )
+endif()
+
 set( COMMON_SOURCE
 	${Json_SOURCE}
 	${fmt_SOURCE}
@@ -437,6 +442,7 @@ set( CLIENT_MAPPER_SOURCE
 	Sprites.cpp Sprites.h
 )
 set( SERVER_MAPPER_SOURCE
+	${OpenFBX_SOURCE}
 	ResourceConverter.h ResourceConverter.cpp
 )
 
