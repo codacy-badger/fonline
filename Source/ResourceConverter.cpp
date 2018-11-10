@@ -1,15 +1,13 @@
 #include "ResourceConverter.h"
 #include "GraphicStructures.h"
 #include "3dAnimation.h"
-#include "assimp/cimport.h"
-#include "assimp/postprocess.h"
-#include "fbxsdk/fbxsdk.h"
 #include "png.h"
 #include "minizip/zip.h"
 
 static uchar* LoadPNG( const uchar* data, uint data_size, uint& result_width, uint& result_height );
 static uchar* LoadTGA( const uchar* data, uint data_size, uint& result_width, uint& result_height );
 
+#if 0
 static Bone* ConvertAssimpPass1( aiScene* ai_scene, aiNode* ai_node );
 static void  ConvertAssimpPass2( Bone* root_bone, Bone* parent_bone, Bone* bone, aiScene* ai_scene, aiNode* ai_node );
 
@@ -136,6 +134,7 @@ static void FixTexCoord( float& x, float& y )
     else if( y > 1.0f )
         y = fmodf( y, 1.0f );
 }
+#endif
 
 FileManager* ResourceConverter::Convert( const string& name, FileManager& file )
 {
@@ -177,6 +176,7 @@ FileManager* ResourceConverter::Convert3d( const string& name, FileManager& file
     AnimSetVec loaded_animations;
 
     // FBX loader
+#if 0
     string ext = _str( name ).getFileExtension();
     if( ext == "fbx" )
     {
@@ -431,6 +431,7 @@ FileManager* ResourceConverter::Convert3d( const string& name, FileManager& file
 
         aiReleaseImport( scene );
     }
+#endif
 
     // Make new file
     FileManager* converted_file = new FileManager();
@@ -446,6 +447,7 @@ FileManager* ResourceConverter::Convert3d( const string& name, FileManager& file
     return converted_file;
 }
 
+#if 0
 static Matrix AssimpGlobalTransform( aiNode* ai_node )
 {
     return ( ai_node->mParent ? AssimpGlobalTransform( ai_node->mParent ) : Matrix() ) * ai_node->mTransformation;
@@ -878,6 +880,7 @@ static Matrix ConvertFbxMatrix( const FbxAMatrix& m )
                    (float) m.Get( 0, 2 ), (float) m.Get( 1, 2 ), (float) m.Get( 2, 2 ), (float) m.Get( 3, 2 ),
                    (float) m.Get( 0, 3 ), (float) m.Get( 1, 3 ), (float) m.Get( 2, 3 ), (float) m.Get( 3, 3 ) );
 }
+#endif
 
 static uchar* LoadPNG( const uchar* data, uint data_size, uint& result_width, uint& result_height )
 {

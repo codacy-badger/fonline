@@ -369,6 +369,7 @@ if( NOT BUILD_ONLY_CLIENT )
 	include_directories( "${CMAKE_BINARY_DIR}/openssl/ssl" )
 endif()
 
+include_directories( "assimp" )
 if( NOT BUILD_ONLY_CLIENT )
 	file( GLOB OpenFBX_SOURCE "OpenFBX/src/ofbx.cpp" "OpenFBX/src/ofbx.h" "OpenFBX/src/miniz.c" "OpenFBX/src/miniz.h" )
 	source_group( "ThirdParty\\OpenFBX" FILES ${OpenFBX_SOURCE} )
