@@ -398,6 +398,14 @@ if( NOT BUILD_ONLY_CLIENT )
 	include_directories( "${CMAKE_BINARY_DIR}/openssl/ssl" )
 endif()
 
+set( WAVM_ENABLE_STATIC_LINKING ON CACHE BOOL "" FORCE )
+set( WAVM_ENABLE_RELEASE_ASSERTS 1 CACHE STRING "" FORCE )
+set( WAVM_METRICS_OUTPUT OFF CACHE BOOL "" FORCE )
+set( WAVM_ENABLE_LTO OFF CACHE BOOL "" FORCE )
+set( WAVM_ENABLE_RUNTIME ON CACHE BOOL "" FORCE )
+add_subdirectory( "WAVM" )
+include_directories( "WAVM/Include" )
+
 set( COMMON_SOURCE
 	${Json_SOURCE}
 	${fmt_SOURCE}
