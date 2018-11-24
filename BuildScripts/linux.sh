@@ -5,6 +5,8 @@
 
 export ROOT_FULL_PATH=$(cd $FO_ROOT; pwd)
 
+export EMSCRIPTEN_VERSION="sdk-1.38.15-64bit"
+
 if [[ -z "$FO_INSTALL_PACKAGES" ]]; then
 	sudo apt-get -y update || true
 	sudo apt-get -y install build-essential
@@ -25,6 +27,16 @@ rm -rf Client/*
 rm -rf Server/*
 rm -rf Mapper/*
 rm -rf ASCompiler/*
+
+cd Server
+cp -r "$ROOT_FULL_PATH/BuildScripts/emsdk" "EmscriptenLinux"
+cd EmscriptenLinux
+chmod +x ./emsdk
+./emsdk update
+./emsdk install $EMSCRIPTEN_VERSION
+./emsdk activate $EMSCRIPTEN_VERSION
+cd ../
+cd ../
 
 mkdir -p x64
 cd x64

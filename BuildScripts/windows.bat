@@ -3,6 +3,8 @@ ECHO ON
 IF [%FO_ROOT%] == [] ECHO FO_ROOT variable is not set & EXIT /B 1
 IF [%FO_BUILD_DEST%] == [] ECHO FO_BUILD_DEST variable is not set & EXIT /B 1
 
+SET EMSCRIPTEN_VERSION=sdk-1.38.15-64bit
+
 PUSHD %CD%\%FO_ROOT%
 SET ROOT_FULL_PATH=%CD%
 POPD
@@ -13,6 +15,16 @@ IF EXIST windows\Client RD windows\Client /S /Q
 IF EXIST windows\Server RD windows\Server /S /Q
 IF EXIST windows\Mapper RD windows\Mapper /S /Q
 IF EXIST windows\ASCompiler RD windows\ASCompiler /S /Q
+
+MKDIR Server
+PUSHD Server
+XCOPY /S/E "%ROOT_FULL_PATH%\BuildScripts\emsdk" "EmscriptenWindows"
+PUSHD EmscriptenWindows
+emsdk update
+emsdk install %EMSCRIPTEN_VERSION%
+emsdk activate %EMSCRIPTEN_VERSION%
+POPD
+POPD
 
 MKDIR windows\x86
 PUSHD windows\x86
