@@ -398,6 +398,9 @@ if( NOT BUILD_ONLY_CLIENT )
 	include_directories( "${CMAKE_BINARY_DIR}/openssl/ssl" )
 endif()
 
+include_directories( "duktape/src" )
+add_library( duktape STATIC "duktape/src/duktape.c" )
+
 set( COMMON_SOURCE
 	${Json_SOURCE}
 	${fmt_SOURCE}
