@@ -29,7 +29,7 @@ rm -rf ASCompiler/*
 mkdir -p x64
 cd x64
 cmake -G "Unix Makefiles" -C "$SOURCE_FULL_PATH/BuildScripts/linux64.cache.cmake" "$SOURCE_FULL_PATH/Source"
-make -j4
+make -j8
 cd ../
 
 # x86 (Temporarily disabled)
@@ -46,5 +46,5 @@ cd ../
 #mkdir -p x86
 #cd x86
 #cmake -G "Unix Makefiles" -C "$SOURCE_FULL_PATH/BuildScripts/linux32.cache.cmake" "$SOURCE_FULL_PATH/Source"
-#make -j4
+#make -j8
 #cd ../
