@@ -1,7 +1,7 @@
 pipeline {
   environment {
     FO_BUILD_DEST = 'Build'
-    FO_SOURCE = '.'
+    FO_ROOT = '.'
     FO_INSTALL_PACKAGES = 0
   }
   options {
@@ -93,6 +93,24 @@ pipeline {
             }
           }
         }
+        stage('Build iOS') {
+          agent {
+            node {
+              label 'mac'
+            }
+          }
+          steps {
+            sh './BuildScripts/ios.sh'
+            dir('Build/ios/') {
+              stash name: 'ios', includes: 'Binaries/**'
+            }
+          }
+          post {
+            cleanup {
+              deleteDir()
+            }
+          }
+        }
       }
     }
     stage('Create Build Artifacts') {
@@ -104,12 +122,13 @@ pipeline {
       steps {
         dir('SDK')
         {
-          sh 'rm -rf ./Binaries/*'
-          unstash 'linux'
+          sh 'rm -rf ./Binaries/ReadMe.txt'
           unstash 'android'
+          unstash 'linux'
+          unstash 'web'
           unstash 'windows'
           unstash 'mac'
-          unstash 'web'
+          unstash 'ios'
           sh 'zip -r -0 ${GIT_COMMIT}.zip ./'
         }
       }
@@ -119,6 +138,9 @@ pipeline {
             archiveArtifacts artifacts: "${GIT_COMMIT}.zip", fingerprint: true
           }
         }
+        cleanup {
+          deleteDir()
+        }        
       }
     }
   }

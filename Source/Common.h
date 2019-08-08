@@ -2,7 +2,7 @@
 #define __COMMON__
 
 // Versions
-#define FONLINE_VERSION                           ( 832 )
+#define FONLINE_VERSION                           ( 840 )
 
 // Debugging
 // #define DEV_VERSION
@@ -189,7 +189,6 @@ void GetHexInterval( int from_hx, int from_hy, int to_hx, int to_hy, int& x, int
 #  endif
 # else
 #  include "SDL_opengles2.h"
-#  include "SDL_opengles2_gl2ext.h"
 #  define glGenVertexArrays                       glGenVertexArraysOES
 #  define glBindVertexArray                       glBindVertexArrayOES
 #  define glDeleteVertexArrays                    glDeleteVertexArraysOES
@@ -284,6 +283,7 @@ struct ClientScriptFunctions
     void* Start;
     void* Finish;
     void* Loop;
+    void* AutoLogin;
     void* GetActiveScreens;
     void* ScreenChange;
     void* ScreenScroll;
@@ -304,6 +304,8 @@ struct ClientScriptFunctions
     void* ItemInvIn;
     void* ItemInvChanged;
     void* ItemInvOut;
+    void* MapLoad;
+    void* MapUnload;
     void* ReceiveItems;
     void* MapMessage;
     void* InMessage;

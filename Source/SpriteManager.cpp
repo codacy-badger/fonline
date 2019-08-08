@@ -36,6 +36,10 @@ PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMG glFramebufferTexture2DMultisampleIMG_;
 PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMG  glRenderbufferStorageMultisampleIMG_;
 #endif
 
+#ifdef FO_IOS
+SDL_Window* SprMngr_MainWindow;
+#endif
+
 SpriteManager::SpriteManager()
 {
     mainWindow = nullptr;
@@ -100,6 +104,22 @@ bool SpriteManager::Init()
         GameOpt.FullScreen = true;
     }
 
+    #ifdef FO_WEB
+    // Adaptive size
+    int window_w = EM_ASM_INT( return window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName( 'body' )[ 0 ].clientWidth );
+    int window_h = EM_ASM_INT( return window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName( 'body' )[ 0 ].clientHeight );
+    GameOpt.ScreenWidth = CLAMP( window_w - 200, 1024, 1920 );
+    GameOpt.ScreenHeight = CLAMP( window_h - 100, 768, 1080 );
+
+    // Fixed size
+    int fixed_w = EM_ASM_INT( return 'foScreenWidth' in Module ? Module.foScreenWidth : 0 );
+    int fixed_h = EM_ASM_INT( return 'foScreenHeight' in Module ? Module.foScreenHeight : 0 );
+    if( fixed_w )
+        GameOpt.ScreenWidth = fixed_w;
+    if( fixed_h )
+        GameOpt.ScreenHeight = fixed_h;
+    #endif
+
     // Initialize window
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 0 );
@@ -133,6 +153,10 @@ bool SpriteManager::Init()
         WriteLog( "SDL Window not created, error '{}'.\n", SDL_GetError() );
         return false;
     }
+
+    #ifdef FO_IOS
+    SprMngr_MainWindow = mainWindow;
+    #endif
 
     #ifndef FO_WEB
     SDL_GLContext gl_context = SDL_GL_CreateContext( mainWindow );
