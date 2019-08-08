@@ -5,7 +5,7 @@
 
 export ROOT_FULL_PATH=$(cd $FO_ROOT; pwd)
 
-export EMSCRIPTEN_VERSION="sdk-1.38.32-64bit"
+export EMSCRIPTEN_VERSION="sdk-1.38.41-64bit"
 
 if [[ -z "$FO_INSTALL_PACKAGES" ]]; then
 	sudo apt-get -y update || true
@@ -30,6 +30,7 @@ cp -r "$ROOT_FULL_PATH/BuildScripts/emsdk" "./"
 cd emsdk
 chmod +x ./emsdk
 ./emsdk update
+./emsdk list
 ./emsdk install $EMSCRIPTEN_VERSION
 ./emsdk activate $EMSCRIPTEN_VERSION
 source ./emsdk_env.sh
