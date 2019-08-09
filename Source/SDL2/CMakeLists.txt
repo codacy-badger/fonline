@@ -1849,7 +1849,9 @@ if(ANDROID)
     set_target_properties(hidapi PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB")
     set_target_properties(hidapi PROPERTIES STATIC_LIBRARY_FLAGS "/NODEFAULTLIB")
   endif()
-  target_link_libraries(hidapi log)
+  if(HAVE_HIDAPI) #!
+    target_link_libraries(hidapi log)
+  endif()
 endif()
 
 if(SDL_STATIC)
