@@ -112,6 +112,10 @@ Android_SetWindowTitle(_THIS, SDL_Window *window)
 void
 Android_SetWindowFullscreen(_THIS, SDL_Window *window, SDL_VideoDisplay *display, SDL_bool fullscreen)
 {
+    //! FOnline error: ISO C90 forbids mixed declarations and code [-Werror=declaration-after-statement]
+    SDL_WindowData *data;
+    int old_w, old_h, new_w, new_h;
+
     SDL_LockMutex(Android_ActivityMutex);
 
     if (window == Android_Window) {
@@ -131,7 +135,7 @@ Android_SetWindowFullscreen(_THIS, SDL_Window *window, SDL_VideoDisplay *display
             goto endfunction;
         }
 
-        SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
+        data = (SDL_WindowData *)window->driverdata;
 
         if (!data || !data->native_window) {
             if (data && !data->native_window) {
@@ -140,11 +144,11 @@ Android_SetWindowFullscreen(_THIS, SDL_Window *window, SDL_VideoDisplay *display
             goto endfunction;
         }
 
-        int old_w = window->w;
-        int old_h = window->h;
+        old_w = window->w;
+        old_h = window->h;
 
-        int new_w = ANativeWindow_getWidth(data->native_window);
-        int new_h = ANativeWindow_getHeight(data->native_window);
+        new_w = ANativeWindow_getWidth(data->native_window);
+        new_h = ANativeWindow_getHeight(data->native_window);
 
         if (new_w < 0 || new_h < 0) {
             SDL_SetError("ANativeWindow_getWidth/Height() fails");
