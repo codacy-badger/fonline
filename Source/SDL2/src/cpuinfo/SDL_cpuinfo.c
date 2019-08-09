@@ -80,7 +80,7 @@
 
 #if defined(__ANDROID__) && defined(__ARM_ARCH) && !defined(HAVE_GETAUXVAL)
 #if __ARM_ARCH < 8
-#include <cpu-features.h>
+// #include <cpu-features.h> //! Android-21 don't have this stuff
 #endif
 #endif
 
