@@ -76,6 +76,7 @@ FileManager* ResourceConverter::Convert3d( const string& name, FileManager& file
     if( !import_props )
     {
         import_props = aiCreatePropertyStore();
+        aiSetImportPropertyInteger( import_props, AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4 );
         aiSetImportPropertyInteger( import_props, AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS, true );
         aiSetImportPropertyInteger( import_props, AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS, false );
         aiSetImportPropertyInteger( import_props, AI_CONFIG_IMPORT_FBX_READ_MATERIALS, true );
@@ -85,20 +86,28 @@ FileManager* ResourceConverter::Convert3d( const string& name, FileManager& file
         aiSetImportPropertyInteger( import_props, AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS, true );
         aiSetImportPropertyInteger( import_props, AI_CONFIG_IMPORT_FBX_STRICT_MODE, false );
         aiSetImportPropertyInteger( import_props, AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, true );
-        aiSetImportPropertyInteger( import_props, AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES, true );
+        aiSetImportPropertyInteger( import_props, AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES, false );
+        aiSetImportPropertyInteger( import_props, AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING, false );
+        aiSetImportPropertyInteger( import_props, AI_CONFIG_FBX_CONVERT_TO_M, false );
+        aiSetImportPropertyInteger( import_props, AI_CONFIG_IMPORT_REMOVE_EMPTY_BONES, false );
+
     }
 
     // Load scene
     aiScene* scene = (aiScene*) aiImportFileFromMemoryWithProperties( (const char*) file.GetBuf(), file.GetFsize(),
-                                                                        aiProcess_CalcTangentSpace | aiProcess_GenNormals | aiProcess_GenUVCoords |
-                                                                        aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
-                                                                        aiProcess_SortByPType | aiProcess_SplitLargeMeshes | aiProcess_LimitBoneWeights |
-                                                                        aiProcess_ImproveCacheLocality, "", import_props );
+                                                                      aiProcess_CalcTangentSpace | aiProcess_GenNormals | aiProcess_GenUVCoords /*|
+                                                                                                                                                   aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
+                                                                                                                                                   aiProcess_SortByPType | aiProcess_SplitLargeMeshes | aiProcess_LimitBoneWeights |
+                                                                                                                                                   aiProcess_ImproveCacheLocality*/, "", import_props );
     if( !scene )
     {
         WriteLog( "Can't load 3d file, name '{}', error '{}'.\n", name, aiGetErrorString() );
         return nullptr;
     }
+
+    // Fix root rotation
+    Matrix mr;
+    scene->mRootNode->mTransformation = Matrix::RotationX( -90.0f * PI_VALUE / 180.0f, mr );
 
     // Extract bones
     root_bone = ConvertAssimpPass1( scene, scene->mRootNode );
@@ -272,7 +281,7 @@ static void ConvertAssimpPass2( Bone* root_bone, Bone* parent_bone, Bone* bone, 
         if( aiGetMaterialTextureCount( material, aiTextureType_DIFFUSE ) )
         {
             aiGetMaterialTexture( material, aiTextureType_DIFFUSE, 0, &path, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr );
-            mesh->DiffuseTexture = path.data;
+            mesh->DiffuseTexture = _str( path.data ).extractFileName();
         }
 
         // Effect

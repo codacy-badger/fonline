@@ -75,6 +75,7 @@
 #define UNUSED_VARIABLE( x )              (void) ( x )
 #define memzero( ptr, size )              memset( ptr, 0, size )
 #define CLEAN_CONTAINER( cont )           { decltype( cont ) __ ## cont; __ ## cont.swap( cont ); }
+#define PI_VALUE                                  ( 3.141592654f )
 
 // FOnline stuff
 #include "Types.h"
@@ -170,8 +171,6 @@ void GetHexInterval( int from_hx, int from_hy, int to_hx, int to_hy, int& x, int
 /************************************************************************/
 
 #if defined ( FONLINE_CLIENT ) || defined ( FONLINE_MAPPER )
-
-# define PI_VALUE                                 ( 3.141592654f )
 
 # include "SDL.h"
 # include "SDL_syswm.h"
